@@ -1,39 +1,75 @@
-# Grocery Receipt OCR API (FastAPI)
+# Grocery Receipt OCR API – Deployment & Usage Documentation
 
-This project is a FastAPI-based API for extracting grocery items from receipt images using OCR.
+## Overview
+This API extracts grocery items from receipt images using OCR.  
+It is deployed and running live on Hugging Face Spaces.
+
+- **Base URL:**  
+  [https://varshith016-grocery-ocr-api.hf.space/](https://varshith016-grocery-ocr-api.hf.space/)
+
+---
 
 ## Endpoints
 
-### Health Check
-- `GET /` — Returns a simple health check response.
+### 1. Health Check
+- **GET /**  
+  Returns a simple message to confirm the API is online.
 
-### Extract Grocery Items
-- `POST /v1/extract_items`
-  - Accepts: Image file (JPG/PNG) as form-data
-  - Requires header: `ocr-api: meallens@ocr`
-  - Returns: List of extracted grocery items with confidence scores
+  **Example Response:**
+  ```json
+  {"message": "API is online. Go to /docs for documentation."}
+  ```
 
-## API Key Authentication
-All requests to `/v1/extract_items` must include the following header:
-```
-ocr-api: meallens@ocr
-```
+---
 
+### 2. Extract Grocery Items
+- **POST /v1/extract_items**
+- **Description:** Upload a receipt image (JPG/PNG) to extract grocery items.
+- **Authentication:**  
+  Requires API key in the header:  
+  `ocr-api: meallens@ocr`
+- **Request:**  
+  - Content-Type: multipart/form-data
+  - Form field: `image` (the image file)
+- **Response:**  
+  Returns a list of extracted grocery items with confidence scores.
+  **Example Response:**
+  ```json
+  [
+    {
+      "id": 1,
+      "name": "Fresh Bananas",
+      "confidence": 95,
+      "amount": "6",
+      "unit": "pieces"
+    },
+    ...
+  ]
+  ```
+---
+## Interactive API Documentation
+- **Swagger UI:**  
+  [https://varshith016-grocery-ocr-api.hf.space/docs](https://varshith016-grocery-ocr-api.hf.space/docs)  
+  Use this to interactively test the API and see request/response formats.
+---
 ## Example Usage (with curl)
-```bash
-curl -X POST "https://<your-space-name>.hf.space/v1/extract_items" \
-  -H  "ocr-api: meallens@ocr" \
-  -H  "accept: application/json" \
-  -H  "Content-Type: multipart/form-data" \
+```sh
+curl -X POST "https://varshith016-grocery-ocr-api.hf.space/v1/extract_items" \
+  -H "ocr-api: meallens@ocr" \
   -F "image=@/path/to/your/receipt.jpg"
 ```
+Replace `/path/to/your/receipt.jpg` with the path to your image file.
+---
+## Deployment Details
+- **Platform:** Hugging Face Spaces (Docker)
+- **OCR Engine:** Tesseract (installed in the Docker container)
+- **API Framework:** FastAPI (Python)
+- **Status:** Online and available 24/7
 
-## Interactive API Docs
-Once deployed, visit:
-```
-https://<your-space-name>.hf.space/docs
-```
-for interactive Swagger UI documentation.
+---
 
-## Deployment
-This app is deployed on Hugging Face Spaces using Docker and runs on port 7860 as required by Spaces. 
+## Notes
+
+- The API is cloud-hosted and available at all times.
+- For any changes or updates, push to the Hugging Face Space repository.
+- For further details, see the `/docs` endpoint.
